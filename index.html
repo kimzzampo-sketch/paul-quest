@@ -164,7 +164,9 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .jc-body{flex:1;min-width:0;}
 .jc-eyebrow{font-family:var(--font-display);font-size:13px;color:var(--jc);letter-spacing:.11em;}
 .jc-name{font-family:var(--font-display);font-size:clamp(19px,5.3vw,22px);color:var(--text);margin:1px 0 3px;}
-.jc-desc{font-size:14px;color:var(--text-soft);line-height:1.5;}
+.jc-desc{font-size:13px;color:var(--text-soft);line-height:1.45;}
+.jc-motto{font-family:var(--font-display);font-size:15px;color:var(--jc);margin:1px 0 3px;line-height:1.3;}
+.intro-motto{display:inline-block;font-family:var(--font-display);font-size:clamp(15.5px,4.4vw,18px);color:var(--jc);background:color-mix(in srgb,var(--jc) 10%, #fff);border:2px dashed color-mix(in srgb,var(--jc) 42%, #fff);border-radius:999px;padding:9px 18px;margin:0 0 12px;line-height:1.35;}
 .jc-progress{margin-top:8px;display:flex;align-items:center;gap:8px;}
 .jc-bar{flex:1;height:10px;background:var(--paper2);border-radius:99px;overflow:hidden;border:1px solid var(--paper-line);}
 .jc-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--jc), color-mix(in srgb,var(--jc) 60%, #FFD34E));border-radius:99px;transition:width .6s ease;}
@@ -216,7 +218,8 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
   padding:9px 14px;border-radius:999px;flex:0 0 auto;min-height:44px;display:flex;align-items:center;
 }
 .map-wrap{position:relative;flex:1;overflow:hidden;background:linear-gradient(180deg,var(--sea-a),var(--sea-b));}
-#mapsvg{position:absolute;left:0;top:0;display:block;transform-origin:0 0;will-change:transform;backface-visibility:hidden;overflow:visible;}
+#mapsvg,#fxsvg{position:absolute;left:0;top:0;display:block;transform-origin:0 0;will-change:transform;backface-visibility:hidden;overflow:visible;}
+#fxsvg{pointer-events:none;}
 
 /* 지도 요소 */
 .sea-label{font-family:var(--font-display);fill:#1C6E9C;opacity:.5;letter-spacing:.2em;}
@@ -695,9 +698,13 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
         <g id="gLabels"></g>
         <g id="gRoutes"></g>
         <g id="gStops"></g>
-        <g id="shipG" style="display:none">
-          <ellipse cx="0" cy="14" rx="11" ry="3.2" fill="rgba(10,30,55,.26)"/><g class="ship-bob"><text id="shipEmoji" y="9">⛵</text></g>
-        </g>
+      </g>
+    </svg>
+    <svg id="fxsvg" viewBox="0 0 1030 590" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g id="gRoutesFx"></g>
+      <g id="shipG" style="display:none">
+        <ellipse cx="0" cy="14" rx="11" ry="3.2" fill="rgba(10,30,55,.26)"/>
+        <g class="ship-bob"><g id="shipFlip"><text id="shipEmoji" y="9">⛵</text></g></g>
       </g>
     </svg>
 
@@ -954,6 +961,7 @@ const JOURNEYS = [
   hex:"#E4572E", soft:"var(--j1-soft)", emoji:"🔥",
   years:"약 주후 46~48년 · 사도행전 13~14장",
   tagline:"구브로 섬과 갈라디아 땅으로!",
+  motto:"전도한 곳을 한 번 더!",
   zoomW:430,
   crew:[{av:"🧔",nm:"바울"},{av:"🤗",nm:"바나바"},{av:"📖",nm:"마가"}],
   routeText:"안디옥 → 실루기아 → 살라미 → 바보 → 버가 → 비시디아 안디옥 → 이고니온 → 루스드라 → 더베 → (되돌아서) → 안디옥",
@@ -1121,6 +1129,7 @@ const JOURNEYS = [
   hex:"#1F9E8E", soft:"var(--j2-soft)", emoji:"🌊",
   years:"약 주후 49~52년 · 사도행전 15:36~18:22",
   tagline:"바다를 건너 유럽 땅에 첫발을!",
+  motto:"내 맘대로 되는 게 하나도 없어!",
   zoomW:470,
   crew:[{av:"🧔",nm:"바울"},{av:"🎵",nm:"실라"},{av:"💙",nm:"디모데"},{av:"🩺",nm:"누가"}],
   routeText:"안디옥 → 루스드라 → 드로아 → 빌립보 → 데살로니가 → 베뢰아 → 아덴 → 고린도 → (배로) → 안디옥",
@@ -1274,6 +1283,7 @@ const JOURNEYS = [
   hex:"#8B5CF6", soft:"var(--j3-soft)", emoji:"🏛️",
   years:"약 주후 53~57년 · 사도행전 18:23~21:16",
   tagline:"에베소에서 3년, 뜨거웠던 사역!",
+  motto:"머리 밀고 결연하게, 로마로 가는 준비!",
   zoomW:470,
   crew:[{av:"🧔",nm:"바울"},{av:"💙",nm:"디모데"},{av:"🩺",nm:"누가"},{av:"📜",nm:"아볼로"}],
   routeText:"안디옥 → 갈라디아 → 에베소(3년!) → 마게도냐 → 고린도 → 드로아 → 밀레도 → 두로 → 가이사랴 → 예루살렘",
@@ -1424,6 +1434,7 @@ const JOURNEYS = [
   hex:"#F58A07", soft:"var(--j4-soft)", emoji:"🌪️",
   years:"약 주후 59~60년 · 사도행전 27~28장",
   tagline:"폭풍을 뚫고 세계의 중심으로!",
+  motto:"복음 들고 끝까지!",
   zoomW:560,
   crew:[{av:"🧔",nm:"바울"},{av:"🩺",nm:"누가"},{av:"🛡️",nm:"율리오"},{av:"🧑",nm:"아리스다고"}],
   routeText:"가이사랴 → 시돈 → 무라 → 미항(그레데) → 유라굴로 폭풍!! → 멜리데 → 보디올 → 압비오 광장 → 로마",
@@ -1572,6 +1583,11 @@ const jz=(j)=>Math.round(j.zoomW*ZOOMK);
 const SS=2;  /* 지도 슈퍼샘플 배율(확대 시 선명도) */
 const mapEl=document.getElementById("mapsvg");
 mapEl.setAttribute("width",MAPW*SS); mapEl.setAttribute("height",MAPH*SS);
+const fxEl=document.getElementById("fxsvg");
+fxEl.setAttribute("width",MAPW*SS); fxEl.setAttribute("height",MAPH*SS);
+const flipEl=document.getElementById("shipFlip");
+let shipDir=0;  /* -1: 왼쪽(이모지 기본), 1: 오른쪽(반전) */
+function setShipDir(nd){ if(nd!==shipDir){ shipDir=nd; flipEl.setAttribute("transform", nd>0 ? "scale(-1,1)" : "scale(1,1)"); } }
 const wrapEl=document.getElementById("mapWrap");
 let VPW=0, VPH=0;
 function readVP(){ VPW=wrapEl.clientWidth||0; VPH=wrapEl.clientHeight||0; }
@@ -1717,16 +1733,19 @@ function closeModal(id){ $("#"+id).classList.remove("show"); }
 const cam={cx:520,cy:300,w:1100};
 const camT={cx:520,cy:300,w:1100};
 function camGo(cx,cy,w){ camT.cx=cx; camT.cy=cy; camT.w=w; }
+let lastTf="";
 function camLoop(){
   if(VPW<10) readVP();               /* 화면 전환 직후 1회 측정 */
   if(VPW>=10){
     const k=REDUCED?1:0.09;
-    cam.cx+=(camT.cx-cam.cx)*k; cam.cy+=(camT.cy-cam.cy)*k; cam.w+=(camT.w-cam.w)*k;
+    const ddx=camT.cx-cam.cx, ddy=camT.cy-cam.cy, ddw=camT.w-cam.w;
+    if(Math.abs(ddx)<0.02&&Math.abs(ddy)<0.02&&Math.abs(ddw)<0.06){ cam.cx=camT.cx; cam.cy=camT.cy; cam.w=camT.w; }
+    else{ cam.cx+=ddx*k; cam.cy+=ddy*k; cam.w+=ddw*k; }
     let w=cam.w; const ratio=VPH/VPW;
     if(w*ratio>1350) w=1350/ratio;
     const sc=VPW/w;                  /* CSS px / 지도단위 */
-    const tx=VPW/2-cam.cx*sc, ty=VPH/2-cam.cy*sc;
-    mapEl.style.transform="translate3d("+tx.toFixed(2)+"px,"+ty.toFixed(2)+"px,0) scale("+(sc/SS).toFixed(5)+")";
+    const tf="translate3d("+(VPW/2-cam.cx*sc).toFixed(2)+"px,"+(VPH/2-cam.cy*sc).toFixed(2)+"px,0) scale("+(sc/SS).toFixed(5)+")";
+    if(tf!==lastTf){ lastTf=tf; mapEl.style.transform=tf; fxEl.style.transform=tf; }
   }
   requestAnimationFrame(camLoop);
 }
@@ -1756,7 +1775,7 @@ function setStorm(on){
 }
 function buildJourneyMap(j){
   const gr=$("#gRoutes"), gs=$("#gStops");
-  gr.innerHTML=""; gs.innerHTML="";
+  gr.innerHTML=""; gs.innerHTML=""; $("#gRoutesFx").innerHTML="";
   document.documentElement.style.setProperty("--jc-cur", j.hex);
   /* 전체 경로 유령선 */
   let allPts=[[j.stops[0].x,j.stops[0].y]];
@@ -1846,6 +1865,7 @@ function showIntro(j,onGo){
     '<div class="bc-emoji">'+j.emoji+'</div>'+
     '<div class="bc-eyebrow">'+j.num+' 원정 · '+j.years+'</div>'+
     '<div class="bc-title">'+j.name+'</div>'+
+    '<div class="intro-motto">「'+j.motto+'」</div>'+
     '<div class="bc-text">'+j.intro.map(p=>"<p style='margin:0 0 10px'>"+p+"</p>").join("")+'</div>'+
     '<div class="intro-crew">'+j.crew.map(c=>'<div class="ic"><span>'+c.av+'</span>'+c.nm+'</div>').join("")+'</div>'+
     '<div class="intro-route">🗺️ '+j.routeText+'</div>'+
@@ -1987,10 +2007,13 @@ function travelTo(i){
   const d=smoothPath(pts);
   const glow=mk("path"); glow.setAttribute("d",d); glow.setAttribute("class","route-trail glow"); glow.setAttribute("stroke",j.hex);
   const trail=mk("path"); trail.setAttribute("d",d); trail.setAttribute("class","route-trail"); trail.setAttribute("stroke",j.hex);
-  $("#gRoutes").appendChild(glow); $("#gRoutes").appendChild(trail);
+  const grFx=$("#gRoutesFx"), grStatic=$("#gRoutes");
+  grFx.appendChild(glow); grFx.appendChild(trail);
   const len=trail.getTotalLength();
   [glow,trail].forEach(p=>{ p.style.strokeDasharray=len; p.style.strokeDashoffset=len; });
   $("#shipEmoji").textContent = to.mode==="land" ? "🚶" : "⛵";
+  const netdx=to.x-from.x;
+  if(Math.abs(netdx)>1) setShipDir(netdx>0?1:-1);   /* 출발 시 진행 방향으로 */
   S.sail();
   /* 경로를 한 번만 샘플링해 두고, 프레임에서는 보간만 (모바일 성능 핵심) */
   const N=Math.max(48,Math.min(220,Math.round(len/3)));
@@ -2004,13 +2027,14 @@ function travelTo(i){
     const e=0.5-0.5*Math.cos(Math.PI*t); /* easeInOut */
     const f=e*N, i0=Math.min(N-1,Math.floor(f)), fr=f-i0;
     const a=PTS[i0], b=PTS[i0+1];
+    if(Math.abs(b.x-a.x)>0.12) setShipDir(b.x-a.x>0?1:-1);  /* 곡선 구간 방향 전환 */
     const px=a.x+(b.x-a.x)*fr, py=a.y+(b.y-a.y)*fr;
     const off=len*(1-e);
     glow.style.strokeDashoffset=off; trail.style.strokeDashoffset=off;
     ship.setAttribute("transform","translate("+px+","+(py-16)+")");
     camGo(px,py,jz(STATE.cur));
     if(t<1) requestAnimationFrame(frame);
-    else arriveAt(i,false);
+    else { grStatic.appendChild(glow); grStatic.appendChild(trail); arriveAt(i,false); }
   }
   requestAnimationFrame(frame);
 }
@@ -2078,6 +2102,7 @@ function finishJourney(j){
     '<div class="bc-emoji">🏅</div>'+
     '<div class="bc-eyebrow">원정 완료!</div>'+
     '<div class="bc-title">'+j.num+' '+j.name+'<br>클리어! 🎉</div>'+
+    '<div class="intro-motto">「'+j.motto+'」</div>'+
     '<div class="bc-stats">'+
       '<div class="bc-stat"><div class="s-num">'+j.stops.length+'</div><div class="s-lab">정거장</div></div>'+
       '<div class="bc-stat"><div class="s-num">'+gotComps+'</div><div class="s-lab">동역자</div></div>'+
@@ -2111,6 +2136,7 @@ function renderHub(){
       '<div class="jc-body">'+
         '<div class="jc-eyebrow">'+j.num+' 원정 · '+j.years.split("·")[1]+'</div>'+
         '<div class="jc-name">'+j.name+'</div>'+
+        '<div class="jc-motto">「'+j.motto+'」</div>'+
         '<div class="jc-desc">'+j.tagline+'</div>'+
         '<div class="jc-progress"><div class="jc-bar"><i style="width:'+pct+'%"></i></div>'+
         '<div class="jc-pct">'+(js.done?"완료!":prog+"/"+j.stops.length+" 정거장")+'</div></div>'+
@@ -2164,7 +2190,7 @@ function openCert(){
     '<div class="cert-frame">'+
       '<div class="cert-top">CERTIFICATE · 바울 원정대</div>'+
       '<div class="cert-name-line"><input class="cert-input" id="certName" maxlength="12" placeholder="탐험가 이름 쓰기 ✏️"></div>'+
-      '<div class="cert-body">위 어린이는 바울의 <b>네 차례 전도 여정</b>,<br>'+totalStops+'개 정거장 '+"약 15,000km"+'의 길을 끝까지 탐험하고<br>'+
+      '<div class="cert-body">위 학생은 바울의 <b>네 차례 전도 여정</b>,<br>'+totalStops+'개 정거장 '+"약 15,000km"+'의 길을 끝까지 탐험하고<br>'+
       '동역자 <b>'+STATE.collected.size+'명</b>을 만났으며 믿음의 별 <b>⭐'+STATE.stars+'개</b>를 모았기에<br>'+
       '<b>「복음 탐험가」</b>로 임명합니다.</div>'+
       '<div class="cert-seal">⛵</div>'+
